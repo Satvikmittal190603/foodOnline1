@@ -13,7 +13,7 @@
                     <p class="text-center">Register your Restaurant with FoodOnline </p>
                     <hr>
                     <div id="restaurant-sets-holder">
-                        <form action ="{% url 'registerVendor' %}"class="form-fields-set foodbakery-dev-restaurant-form" method="post" enctypr="multipart/form-data">
+                        <form action ="{% url 'registerVendor' %}"class="form-fields-set foodbakery-dev-restaurant-form" method="post" enctype="multipart/form-data">
                            {% csrf_token %}
                             <ul class="register-add-restaurant-tab-container restaurant-information-tab-container">
                                 <li>

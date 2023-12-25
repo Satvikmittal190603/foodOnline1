@@ -10,15 +10,22 @@ from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.decorators import login_required ,user_passes_test
 from django.core.exceptions import PermissionDenied
+
+from vendor.models import Vendor
 # Create your views here.
 
-#Restrict vendor to access the customer dashboard
 
+
+
+#Restrict vendor to access the customer dashboard
 def check_role_vendor(user):
     if user.role==1:
         return True
     else:
         raise PermissionDenied
+
+
+
 
 #Restrict customer to access the vendor dashboard
 def check_role_customer(user):
@@ -26,6 +33,10 @@ def check_role_customer(user):
         return True
     else:
         raise PermissionDenied
+
+
+
+
 
 def registerUser(request):
     if request.user.is_authenticated:
@@ -56,6 +67,8 @@ def registerUser(request):
         'form':form
     }
     return render(request,"accounts/registerUser.html",context)
+
+
 
 
 
@@ -100,6 +113,8 @@ def registerVendor(request):
     return render(request,"accounts/registerVendor.html",context)
 
 
+
+
 def activate(request,uidb64,token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
@@ -114,6 +129,10 @@ def activate(request,uidb64,token):
     else:
         messages.error(request,'invalid activation link')
         return redirect('myAccount')
+
+
+
+
 
 def login(request):
     
@@ -135,11 +154,19 @@ def login(request):
             return redirect('login')
     return render(request,"accounts/login.html")
 
+
+
+
+
 def logout(request):
     auth.logout(request)
     messages.info(request,"you are logged out")
     return redirect('login')
     #return render(request,"accounts/logout.html")
+
+
+
+
 
 @login_required(login_url='login')
 def myAccount(request):
@@ -147,15 +174,31 @@ def myAccount(request):
     redirecturl = detectUser(user)
     return redirect(redirecturl)
 
+
+
+
+
 @login_required(login_url='login')
 @user_passes_test(check_role_customer)
 def custDashboard(request):
     return render(request,"accounts/custDashboard.html")
 
+
+
+
+
 @login_required(login_url='login')
 @user_passes_test(check_role_vendor)
 def vendorDashboard(request):
+    vendor = Vendor.objects.get(user=request.user)
+    context = {
+        'vendor':vendor,
+    }
     return render(request,"accounts/vendorDashboard.html")
+
+
+
+
 
 def forgot_password(request):
     if request.method == 'POST':
@@ -175,6 +218,10 @@ def forgot_password(request):
             
     return render(request,"accounts/forgot_password.html")
 
+
+
+
+
 def reset_password_validate(request,uidb64,token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
@@ -189,6 +236,10 @@ def reset_password_validate(request,uidb64,token):
     else:
         messages.error(request,'This link has been expired')
         return redirect("myAccount")
+
+
+
+
 
 def reset_password(request):
     if request.method == 'POST':

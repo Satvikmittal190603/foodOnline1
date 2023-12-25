@@ -1,0 +1,13 @@
+{% autoescape off %}
+
+Hi {{user.first_name}}
+{% if is_approved %}
+Congratulations! your Restuarant has been approved by our admin team
+{% else %}
+We're sorry ! You are not eligible 
+{% endif %}
+
+
+
+
+{% endautoescape %}
